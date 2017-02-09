@@ -1,9 +1,14 @@
+// Folding cube 
+// by gmt(todesco@toonz.com); feb2017 
 
 var foldingCube;
 
 function subrange(x,a,b) { return x<=a?0:x>=b?1:(x-a)/(b-a); } 
 function smooth(x) { return x*x*(3-2*x); }
 
+//
+// class FoldingCube
+//
 function FoldingCube(name, scene) {
     this.scene = scene;
     
@@ -27,11 +32,7 @@ function FoldingCube(name, scene) {
     }
     this.tmax = 1;
     this.aperture = 0;
-    this.configure(0);
-    // face2.parent = mainFace;
-    // face2.setPivotMatrix(new BABYLON.Matrix.Translation(1,0,0));
-    // face2.position.x = 1;
-        
+    this.configure(0);        
 }
 
 FoldingCube.prototype.setShadowGenerator = function(shadowGenerator) {
@@ -83,33 +84,13 @@ FoldingCube.prototype.configure = function(index) {
         [[0,U],[1,L],[0,D],[3,R],[4,D]],
         [[0,R],[1,U],[2,U],[0,D],[4,D]],
         [[0,U],[1,R],[1,U],[0,L],[4,D]],
-        [[0,R],[1,U],[2,R],[0,D],[4,L]],
-        
-        
-/*        [[0,],[0,1],[0,2],[0,3],[4,3]],
-        
-        [[0,1],[1,2],[0,3],[3,3],[4,0]],
-        
-        [[0,1],[1,0],[0,3],[3,3],[3,2]],
-        [[0,1],[1,0],[0,3],[3,3],[0,2]],
-        [[0,1],[1,0],[0,3],[3,3],[1,2]],
-  */      
-        
-        
+        [[0,R],[1,U],[2,R],[0,D],[4,L]],                        
     ];
+    
     if(index<0 || index>=unfoldings.length) return;
     unfolding = unfoldings[index];
 
-    var faces = this.faces;
-    /*
-    for(var i=0;i<6;i++) {
-        var f = faces[i];
-        f.parent = undefined;
-        f.position.copyFromFloats(0,0,0);
-        f.setPivotMatrix(new BABYLON.Matrix.Translation(0,0,0));
-    }
-    */
-    
+    var faces = this.faces;    
     this.tmax = 1;
     var faces = this.faces;    
     for(var i=0;i<5;i++) { 
@@ -121,11 +102,14 @@ FoldingCube.prototype.configure = function(index) {
 
 FoldingCube.prototype.setAperture = function(t) {
     this.aperture = t;
-    this.foldFaces();
-    
+    this.foldFaces();    
 }
  
-
+// end of FoldingCube class
+ 
+//
+// create the babylon scene, engine etc.
+//
 function createFoldingCubeScene(canvas) {
     var engine = new BABYLON.Engine(canvas, true);
     var scene = new BABYLON.Scene(engine);
@@ -138,14 +122,11 @@ function createFoldingCubeScene(canvas) {
     camera.attachControl(canvas, false);
 
     scene.ambientColor = new BABYLON.Color3(0.3,0.3,0.3);
-    //var light = new BABYLON.HemisphericLight('light1',
-    //    new BABYLON.Vector3(0.1,1,-0.3), scene);
 
     var light = new BABYLON.PointLight(
         "light0", 
         new BABYLON.Vector3(0, 5, 0), scene);
     light.intensity = 0.5;
-    // light.ambientColor = new BABYLON.Color3(1, 1, 1);    
     var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
     shadowGenerator.useBlurVarianceShadowMap = true;
     shadowGenerator.blurScale = 4.0;
@@ -157,9 +138,6 @@ function createFoldingCubeScene(canvas) {
        new BABYLON.Vector3(0.0,0.4,0.0), scene);
     light2.intensity = 0.3;
     light2.parent = camera;
-
-    // box1.position.y = 2;
-
 
     var groundMat = new BABYLON.StandardMaterial("groundMat", scene);
     groundMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
@@ -178,6 +156,8 @@ function createFoldingCubeScene(canvas) {
     return scene;
 }
 
+// 
+// create the Babylon scene and attach the open/close slider
 function createFoldingCubeAnimation() {
     var canvas,scene;
     canvas = document.getElementById('foldingCubeCanvas');
@@ -192,6 +172,8 @@ function createFoldingCubeAnimation() {
     });
 }
 
+// draw the 11 icons representing different cube unfoldings
+// when the user click the index-th icon then calls callback(index)
 
 function createFoldingCubeIcons(callback) {
     var canvas,scene;
@@ -213,21 +195,30 @@ function createFoldingCubeIcons(callback) {
     ];
     
 
-    var sz = 4, u = sz+1;
+    var sz = 6, u = sz+1;
+    var mrg = sz - 1;
     var x0 = 5, y0 = 5;
-    var ys = [];
-    var y = y0;
-    for(var i=0; i<pp.length; i++) {
-        ly = u*((i==8) ? 5 : 4) - (u-sz);
-        ys.push([y,y+ly-1]);
-        y += ly + 4;
-    }
+    var positions = [];
+    var sizes = [];
+    var x = x0, y = y0;
+    var tlx = [3,3,3,3,3,3,3,3,2,3,4];
+    var tly = [4,4,4,4,4,4,4,4,5,4,3];
     
+    for(var i=0; i<pp.length; i++) {
+        lx = u*tlx[i];
+        ly = u*tly[i];
+        positions.push(x,y);
+        sizes.push(lx,ly);
+        if(canvas.width>canvas.height) x += lx + mrg;
+        else y += ly + mrg;
+    }
     var drawItem = function(i, hl) {
         if(hl) ctx.fillStyle = '#0000ff';
         else  ctx.fillStyle = '#000000';      
+        var x1 = x0 + positions[i*2];
+        var y1 = y0 + positions[i*2+1];        
         for(var j=0; j<6;j++) {
-            var x = x0 + u*pp[i][j][0], y = ys[i][0] + u*pp[i][j][1];
+            var x = x1 + u*pp[i][j][0], y = y1 + u*pp[i][j][1];
             ctx.fillRect(x,y,sz,sz);            
         }        
     }
@@ -236,11 +227,14 @@ function createFoldingCubeIcons(callback) {
     canvas.curIndex = 0;
     
     canvas.addEventListener('click', function(e) {
+        var x = e.offsetX;
         var y = e.offsetY;
         var index = canvas.curIndex;
         for(var i=0;i<11;i++) {
-            yr = ys[i];
-            if(yr[0]<y && y<yr[1]) {index = i; break; }
+            var xa = x0 + positions[i*2], ya = y0 + positions[i*2+1];
+            var xb = xa + sizes[i*2], yb = ya + sizes[i*2+1];
+            
+            if(xa<=x && x<=xb && ya<=y && y<=yb) {index = i; break; }
         }
         if(index != canvas.curIndex) {
             drawItem(canvas.curIndex, false);

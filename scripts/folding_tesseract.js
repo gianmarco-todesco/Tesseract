@@ -3,9 +3,12 @@ var foldingTesseract;
 function subrange(x,a,b) { return x<=a?0:x>=b?1:(x-a)/(b-a); } 
 function smooth(x) { return x*x*(3-2*x); }
 
+//
+// class FoldingTesseract
+//
 function FoldingTesseract(name, scene) {
     var mat1 = new BABYLON.StandardMaterial("mat2", scene);
-    mat1.diffuseTexture = new BABYLON.Texture("images/hc_face.png", scene);
+    mat1.diffuseTexture = new BABYLON.Texture("images/hc_face2.png", scene);
     mat1.backFaceCulling = true;
     mat1.specularColor.r = mat1.specularColor.g = mat1.specularColor.b = 0.1;
     
@@ -279,8 +282,12 @@ FoldingTesseract.prototype.tick = function() {
        this.holeStatus == false && this.hole != 0.0) this.holeTick(dt);
     this.zwRotationTick(dt);
 }
+//
+// end of class FoldingTesseract
+//
 
 
+// create the Babylon scene & engine; the scene contains a folding tesseract 
 function createFoldingTesseractScene(canvas) {
     var engine = new BABYLON.Engine(canvas, true);
     var scene = new BABYLON.Scene(engine);
@@ -295,24 +302,8 @@ function createFoldingTesseractScene(canvas) {
         new BABYLON.Vector3(0.0,0.0,0.0), scene);
     light.parent = camera;
     
-    //var light2 = new BABYLON.HemisphericLight('light2',
-    //    new BABYLON.Vector3(-0.1,0.6,-0.7), scene);
-    //sphere2 = BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene);
-    //sphere2.position.y = 1;
-
     foldingTesseract = new FoldingTesseract("ft", scene);
     
-    // foldingTesseract.mesh.position.y = 1;
-
-    /*
-    var groundMat = new BABYLON.StandardMaterial("groundMat2", scene);
-    groundMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-    groundMat.ambientColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-    var ground = BABYLON.Mesh.CreateGround('ground1', 24, 24, 2, scene);
-    ground.position.y = -3;
-    ground.
-    */
-
     engine.runRenderLoop(function() {
       scene.render();
       foldingTesseract.tick();
@@ -322,20 +313,12 @@ function createFoldingTesseractScene(canvas) {
 
 var myScene;
 
+// find the canvas '#foldingTesseractCanvas' and create the babylon scene
 function createFoldingTesseractAnimation() {
     canvas = document.getElementById('foldingTesseractCanvas');
     scene = createFoldingTesseractScene(canvas);
-    // scene.debugLayer.show(false);
-    myScene = scene;
-    
-    /*
-    var size= 3;
-    var axisX = BABYLON.Mesh.CreateLines("axisX", [new BABYLON.Vector3.Zero(), new BABYLON.Vector3(size, 0, 0) ], scene);
-    axisX.color = new BABYLON.Color3(1, 0, 0);
-  	var axisY = BABYLON.Mesh.CreateLines("axisY", [new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, size, 0) ], scene);
-  	axisY.color = new BABYLON.Color3(0, 1, 0);
-  	var axisZ = BABYLON.Mesh.CreateLines("axisZ", [new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, 0, size) ], scene);
-  	axisZ.color = new BABYLON.Color3(0, 0, 1);
-    */
+    myScene = scene;    
 }
+
+
 

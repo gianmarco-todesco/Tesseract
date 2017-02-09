@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Header ------------------------------>
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+<title>Folding cube</title>
+<link href="lib/jquery-ui.min.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
+<script src="lib/jquery.js"></script>
+<script src="lib/jquery-ui.min.js"></script>
+<script src="lib/babylon.custom.js"></script>    
+<script src="scripts/folding_square.js" ></script>
+<script src="scripts/folding_cube.js" ></script>
+<script src="scripts/folding_tesseract.js"></script>        
+    
+</head>
+<body>
+
+
+
+ 
+<div class="animation">
+<div style="width:600px;height:400px;position:relative;">
+<canvas id="foldingCubeCanvas" width="600" height="400" tabindex="1" 
+        style="position:absolute;left:0px;top:0px;"></canvas>
+<img src="images/click_drag_icon.png" 
+        style="position:absolute;right:5px;top:65px;z-index:2">
+<img src="images/zoom_icon.png"
+        style="position:absolute;right:5px;top:5px;z-index:2">
+<canvas id="foldingCubeIconsCanvas" width="300" height="30"
+    style="position:absolute;left:5px; top:5px; z-index:3"></canvas>
+    
+<div class="sliderDiv unselectable">
+<span>Aperto</span>
+<div class="slider ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" id="foldingCubeSlider">
+<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;">
+</span></div>
+<span>Chiuso</span>
+</div>
+
+
+<script> 
+createFoldingCubeAnimation();
+createFoldingCubeIcons(function(index) { foldingCube.configure(index); } );
+</script>
+
+
+</body>
+
+
