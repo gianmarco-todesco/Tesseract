@@ -1,0 +1,115 @@
+      body {padding:50px; color:#555; font-family:Calibri; text-align:justify;  }
+      h1 { text-align:center; margin-bottom:2em; }
+      p { margin-bottom:2em; }
+      
+      .unselectable {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;      
+      }
+      
+      canvas {
+        cursor:pointer;      
+      }
+      
+      .mouse_icons {
+        position:absolute;
+        left:10px;
+        top:10px;
+        z-index:30;
+      }
+      
+      #foldingSquareMain {
+        width:320px;
+        height:220px;
+        margin-right:10px; 
+        float:left;
+        position:relative;
+        top:-50px;
+      }
+
+      
+      #foldingCubeMain {
+        position:relative;
+        /* border:solid 2px red; */
+        
+        width:100%;
+        height:340px;
+      }
+      #foldingCubeCanvas {
+        position:absolute;
+        left:0px;
+        top:0px;
+        /* border:solid 2px green; */
+        z-index:5;
+      }
+      #foldingCubeIconsCanvas {
+        position:absolute;
+        left:410px;
+        top:0px;
+        /*border:solid 1px blue;*/
+        z-index:10;
+      }
+      #foldingCubeSliderDiv {
+        position:absolute;
+        left:0px;
+        bottom:0px;
+        padding-left:30px;
+        /* border:solid 1px red; */
+        z-index:30;
+      }
+      #foldingCubeNotes {
+        padding-top:2px;
+        padding-left:20px;
+        position:absolute;
+        left:450px;
+        min-width: 300px;        
+        /* border:solid 1px magenta; */        
+      }
+      
+      
+      #foldingTesseractMain {
+        position:relative;
+        /* border:solid 1px red; */
+        width:100%;
+        height:300px;
+      }
+      #foldingTesseractCanvas {
+        position:absolute;
+        left:0px;
+        top:0px;
+        width:400px;
+        height:100%;
+        /* border:solid 1px green; */
+        z-index:5;
+      }
+      #foldingTesseractNotes {
+        padding-top:2px;
+        padding-left:20px;
+        position:absolute;
+        left:450px;
+        min-width: 300px;
+        
+        /* border:solid 1px magenta; */
+        
+      }
+      .slider {
+        display:inline-block;
+        width:150px;
+        margin-left:20px;
+        margin-right:20px
+      }
+      
+      
+      .sect {
+        font-size:1.5em;
+        color:#aaa;
+        margin-top: 2em;
+        margin-bottom: 2em;        
+        clear: both;
+        text-align:center;
+     }
+      

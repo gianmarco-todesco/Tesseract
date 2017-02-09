@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Header ------------------------------>
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+<title>Catastroficamente creativo</title>
+<link href="lib/jquery-ui.min.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
+<script src="lib/jquery.js"></script>
+<script src="lib/jquery-ui.min.js"></script>
+<script src="lib/babylon.custom.js"></script>    
+<script src="scripts/folding_square.js" ></script>
+<script src="scripts/folding_cube.js" ></script>
+<script src="scripts/folding_tesseract.js"></script>        
+    
+</head>
+<body>
+<!-- Body ------------------------------>
+<img src="images/Dali_Crucifixion_hypercube.jpg" style="width:200px; float:right; margin-left:30px;"/>
+
+<h1>
+Catastroficamente creativo
+</h2>
+
+<p>
+Ahiahiahiahi....eccolo arrivato, il nostro curiosone...hai sentito parlare di 4 dimensioni 
+e ti si sono rizzate le orecchie!?!?! Bene bene: sei pronto per giocare con ... 
+la matematica?! Sembra un ossimoro, no? E invece vedrai che la matematica pu&ograve; non 
+solo essere divertente, ma anche stimolare la tua creatività. Provare per credere! 
+</p>
+<p>
+Salvador Dalí, per esempio, ci giocava eccome (e più creativo di lui...)! 
+La quarta dimensione, in particolare, lo intrigava assai, tanto da spingerlo a 
+inchiodare uno dei suoi imponenti Cristoni a una croce assai scomoda, a forma di 
+ipercubo: guardala nella rappresentazione accanto.
+</p>
+<p>
+Così come la croce rappresenta lo sviluppo piano di un cubo, la figura alla 
+quale è inchiodato il Cristo dalinano rappresenta lo sviluppo tridimensionale del 
+suo analogo in dimensione 4, che noi matematici chiamiamo appunto ipercubo: ci&ograve; 
+serve all'artista per comunicare l'idea della trascendenza del Cristo, che vive in 
+una dimensione superiore a quella che noi umani siamo capaci di concepire. 
+</p>
+
+<p class="sect">&sect;</p>
+
+<!-- Quadrato ------------------------------------------------------------- -->
+
+<div id="foldingSquareMain" class="unselectable">
+<canvas id="square" width="300" height="180" >
+</canvas>
+<br>
+<strong>Chiuso</strong> 
+<div style="display:inline-block;width:150px;margin-left:20px;margin-right:20px;" 
+   id="slider"></div>
+<strong>Aperto</strong>
+</div>
+<script> 
+drawFoldingSquare(90);
+$( "#slider" ).slider({animate:"fast", slide: function(e,ui) { drawFoldingSquare(90-90*ui.value*0.01);},});    
+</script>
+
+<p>
+Vediamo di spiegare un pochino di che si tratta: tutti possiamo immaginare un quadrato.
+ Se "stacchiamo" i due lati che convergono in uno dei suoi vertici, possiamo "aprire" 
+ il quadrato, fino a stenderlo lungo una retta, di cui occupa 4 segmenti consecutivi: 
+ questa figura rappresenta lo sviluppo 1-dimensionale di un quadrato, che di suo vive 
+ nel piano, ovvero in 2 dimensioni. 
+</p>
+
+<p class="sect">&sect;</p>
+
+<!-- Cubo ----------------------------------------------------------------- -->
+
+<p> 
+Adesso prendiamo un cubo: tutti possiamo immaginarcelo, ma le cose sono ancora più facili 
+se lo teniamo in mano, per esempio sotto forma di scatola cubica di cartone, oppure se lo 
+guardiamo nell'animazione di sinistra, a partire dalla posizione "chiuso". Se tagliamo 
+lungo tre lati consecutivi il tappo della scatola, e poi tagliamo accuratamente lungo 
+altri lati (quali?) possiamo, analogamente con quanto fatto prima con il quadrato, 
+"aprire" il cubo e spalmarlo sul piano di un tavolo: la figura a croce che otteniamo 
+rappresenta lo sviluppo 2-dimensionale del cubo, che di suo vive invece nello spazio, 
+ovvero in 3 dimensioni. Prima di farlo, facendo scorrere il cursore dalla posizione 
+"chiuso" alla posizione "aperto", cerca di immaginartelo: l'hai fatto proprio come lo 
+fa l'animazione, o l'hai fatto in modo diverso? Secondo te, il cubo si pu&ograve; spiaccicare 
+sul piano in un modo solo? Se sei curioso di scoprirlo, guarda qui
+</p>
+
+<div id="foldingCubeMain" class="unselectable">
+<canvas id="foldingCubeCanvas" width="400" height="300" tabindex="1"></canvas>
+<canvas id="foldingCubeIconsCanvas" width="30" height="300"></canvas>
+<div class="mouse_icons unselectable">
+<img src="images/mouse_left_button_32.png" >
+<img src="images/mouse_wheel_32.png" >
+</div>
+<div id="foldingCubeSliderDiv">
+<strong>Aperto</strong>
+<div class="slider ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" id="foldingCubeSlider"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span></div>
+<strong>Chiuso</strong>
+</div>
+
+<div id="foldingCubeNotes">
+<p><span style="color:red">gmt</span>: Qui bisognerebbe forse aggiungere due parole di spiegazione, ad es. fai click &amp; drag sull'immagine per 
+cambiare il punto di vista; usa la rotellina del mouse per avvicinarti o allontanarti,
+fai click sulle icone qui a sinistra per cambiare il collegamento fra i quadrati e 
+apri e chiudi il cubo muovendo lo slider qui sotto:</p>
+<br>
+</div> <!-- foldingCubeNotes -->
+</div> <!-- foldingCubeMain -->
+
+<script> 
+createFoldingCubeAnimation();
+createFoldingCubeIcons(function(index) { foldingCube.configure(index); } );
+</script>
+
+<p class="sect">&sect;</p>
+
+<!-- IperCubo ------------------------------------------------------------- -->
+
+
+<p>
+Per finire, prendiamo un ipercubo: nessuno di noi se lo pu&ograve; immaginare (almeno credo, 
+con gli artisti meglio non essere categorici) perché si tratta di un oggetto che vive 
+in 4 dimensioni, dove la nostra percezione non ci consente di arrivare. Tuttavia possiamo 
+pensare di fare l'analogo di quanto fatto prima col quadrato e poi col cubo, ovvero 
+"tagliare" l'ipercubo lungo...lungo cosa?....
+'animazione di destra ti darà la risposta, se la osservi muovendo lentamente il 
+cursore dalla posizione "chiuso" a quella "aperto". Ma non farlo subito, prima prova
+ a immaginartelo!!!
+Se ci pensi, oppure se bari e guardi l'animazione, concluderai che l'ipercubo va tagliato 
+lungo un insieme di quadrati, che fanno da bordo a cubi, che a loro volta fanno da bordo
+ all'ipercubo. Se tagli nel modo giusto, puoi "aprire" il tuo ipercubo e 
+ "spalmarlo" ...dove?...nello spazio ordinario, ovvero nello spazio a 3 dimensioni, 
+ dove tutti possiamo vederlo. Quello che vedremo è in realtà lo sviluppo 3-dimensionale 
+ dell'ipercubo, che di suo vive nello spazio 4 dimensionale, ma ci fa il piacere di 
+ lasciarsi spiaccicare in una dimensione inferiore, in modo che Dalí lo possa disegnare!
+ </p>
+ 
+ 
+ 
+<div id="foldingTesseractMain" class="unselectable">
+
+<canvas id="foldingTesseractCanvas"></canvas>
+
+<div id="foldingTesseractNotes">
+<p><span style="color:red">gmt</span>: Anche qui ci andrebbero due parole di spiegazione ad es. fai click &amp; drag sull'immagine per 
+cambiare il punto di vista; usa la rotellina del mouse per avvicinarti o allontanarti,
+fai click sui checkbox in basso per bucare le facce of far ruotare il cubo attorno a zw e 
+apri e chiudi il cubo muovendo lo slider qui sotto.<br>
+N.B. probabilmente conviene abilitare la rotazione solo quando il tessetopo &egrave; chiuso.</p>
+<br>
+
+
+<br>
+<strong>Aperto</strong>
+<div style="display:inline-block;width:150px;margin-left:20px;margin-right:20px;" id="foldingTesseractSlider" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span></div>
+<strong>Chiuso</strong>
+<br>
+<p>
+Facce bucate <input type="checkbox" id="hole_check"><br>
+Rotazione sugli assi ZW <input type="checkbox" id="rotate_check"><br>
+</p>
+</div>
+</div>
+
+<script> 
+createFoldingTesseractAnimation();
+$( "#foldingTesseractSlider" ).slider({slide: function(e,ui) {foldingTesseract.setAperture(ui.value*0.01);}});
+/*
+$( "#holeSlider" ).slider({slide: function(e,ui) {foldingTesseract.setHole(ui.value*0.01);}});
+$( "#zwSlider" ).slider({slide: function(e,ui) {foldingTesseract.setTheta(ui.value*0.01);}});
+*/
+
+$("#rotate_check").click( function(){
+   if( $(this).is(':checked') ) foldingTesseract.zwRotationEnabled = true;
+   else foldingTesseract.zwRotationEnabled = false;
+});
+$("#hole_check").click( function(){
+   if( $(this).is(':checked') ) foldingTesseract.setHoleStatus(true);
+   else foldingTesseract.setHoleStatus(false);
+});
+</script>  
+
+<p class="sect">&sect;</p>
+
+<!-- Footer --------------------------------------------------------------- -->
+
+ 
+ <p>
+Vogliamo mettere anche qualcosa sulla rappresentazione di schlegel? In mostra c'è 
+un'animazione (a mio parere piuttosto bruttina) in proposito, a partire da questo quadro 
+(A proposito del "Discorso sulla forma cubica" di Juan de Herrera)
+</p>
+ 
+<hr>
+<p>
+I crediti, e i riferimenti, e il link dell'universit&agrave;....
+</p>
+
+
+</body>
+</html>
+  
