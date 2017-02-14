@@ -53,9 +53,16 @@ createFoldingTesseractAnimation();
 $( "#foldingTesseractSlider" ).slider({slide: function(e,ui) {foldingTesseract.setAperture(ui.value*0.01);}});
 $("#pierced_faces_btn").click(function() { 
     foldingTesseract.holeStatus = ! foldingTesseract.holeStatus;
+    $("#pierced_faces_btn").attr("src", foldingTesseract.holeStatus 
+        ? "images/pierced_faces_active_icon.png"
+        : "images/pierced_faces_icon.png");
 });
 $("#zw_axis_rotation_btn").click(function() { 
     foldingTesseract.zwRotationEnabled = ! foldingTesseract.zwRotationEnabled;
+    $("#zw_axis_rotation_btn").attr("src", foldingTesseract.zwRotationEnabled 
+        ? "images/zw_axis_rotation_active_icon.png"
+        : "images/zw_axis_rotation_icon.png");
+    
 });
 </script>  
 <!-- End Folding Tesseract ---------------------------------------------------------------- -->

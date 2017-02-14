@@ -156,6 +156,31 @@ function createFoldingCubeScene(canvas) {
     return scene;
 }
 
+/*
+function createHud(scene) {
+    var c2d = new BABYLON.ScreenSpaceCanvas2D(scene, 
+    { 
+        id: "c2d_1", size: new BABYLON.Size(400, 200), 
+        x:100, y:600,
+        backgroundFill: "#C0C0C040", 
+        backgroundRoundRadius: 20 
+    });
+
+    var rect = new BABYLON.Rectangle2D({
+        id: "mainRect", parent: c2d, x: 2, y: 2, width: 100, height: 100, 
+        fill: "#404080FF", border: "#A040A0D0, #FFFFFFFF", borderThickness: 10, 
+        roundRadius: 10, 
+        children: 
+        [
+            new BABYLON.Rectangle2D(
+            { 
+                id: "insideRect", marginAlignment: "v: center, h: center", 
+                width: 40, height: 40, fill: "#FAFF75FF", roundRadius: 10 
+            })
+        ]});
+}
+*/
+
 // 
 // create the Babylon scene and attach the open/close slider
 function createFoldingCubeAnimation() {
@@ -163,11 +188,25 @@ function createFoldingCubeAnimation() {
     canvas = document.getElementById('foldingCubeCanvas');
     scene = createFoldingCubeScene(canvas);
 
+    // createHud(scene);
+    /*
+    hud.pointerEventObservable.add(function (d, s) {
+        console.log(d,s);
+    }, BABYLON.PrimitivePointerInfo.PointerDown);
+    
+    hud.pointerEventObservable.add(function (d, s) {
+        console.log("ok");
+    }, BABYLON.PrimitivePointerInfo.PointerUp);
+    */
+    
+
+    
     $( "#foldingCubeSlider" ).slider({
         animate:"fast",
         slide: function(e,ui) {
-            foldingCube.setAperture(ui.value*0.01);
+            foldingCube.setAperture(1.0-ui.value*0.01);
         },
+        value:100
 
     });
 }

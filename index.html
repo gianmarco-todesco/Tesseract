@@ -6,6 +6,7 @@
 <title>Catastroficamente creativo</title>
 <link href="lib/jquery-ui.min.css" rel="stylesheet">
 <link href="style.css" rel="stylesheet">
+<script src="lib/hand.js"></script>
 <script src="lib/jquery.js"></script>
 <script src="lib/jquery-ui.min.js"></script>
 <script src="lib/babylon.custom.js"></script>    
@@ -15,8 +16,9 @@
 <link rel="icon" href="images/dali.ico">    
 </head>
 <body>
-<h1>Catastroficamente creativo</h1>
+<img id="dali_img" alt="Salvador Dalì" src="images/dali_bg.png">
 
+<h1>Catastroficamente creativo</h1>
 <div id="main">
 
 <img src="images/Dali_Crucifixion_hypercube.jpg" alt="Dalì crucifixion" style="width:200px; float:right; margin-left:30px;"/>
@@ -31,7 +33,7 @@ credere! </p>
 Salvador Dal&iacute;, per esempio, ci giocava eccome (e pi&ugrave; creativo di lui...)! 
 La quarta dimensione, in particolare, lo intrigava assai, tanto da spingerlo a 
 inchiodare uno dei suoi imponenti Cristoni a una croce assai scomoda, a forma di 
-ipercubo: guardala nella rappresentazione.
+ipercubo: guardala nella rappresentazione qui a fianco.
 </p>
 
 <p>Cos&igrave; come la croce rappresenta lo sviluppo piano di un cubo, la figura
@@ -88,8 +90,8 @@ $( "#slider" ).slider({animate:"fast", slide: function(e,ui) { drawFoldingSquare
 <!-- Folding Cube ======================================================== -->
 <div class="animation" >
 
-<div style="width:600px;height:400px;position:relative;float:left;margin-right:20px;">
-<canvas id="foldingCubeCanvas" width="600" height="400" tabindex="1" 
+<div style="width:400px;height:300px;position:relative;float:left;margin-right:20px;">
+<canvas id="foldingCubeCanvas" width="400" height="300" tabindex="1" 
         style="position:absolute;left:0px;top:0px;"></canvas>
 <img src="images/click_drag_icon.png" alt="click&drag icon"
         style="position:absolute;right:5px;top:65px;z-index:2">
@@ -99,11 +101,11 @@ $( "#slider" ).slider({animate:"fast", slide: function(e,ui) { drawFoldingSquare
     style="position:absolute;left:5px; top:5px; z-index:3"></canvas>
     
 <div class="sliderDiv unselectable">
-<span>Aperto</span>
+<span>Chiuso</span>
 <div class="slider ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" id="foldingCubeSlider">
 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;">
 </span></div>
-<span>Chiuso</span>
+<span>Aperto</span>
 </div> <!-- slider --> 
 </div> <!-- animation --> 
 
@@ -117,7 +119,7 @@ createFoldingCubeIcons(function(index) { foldingCube.configure(index); } );
  vedere l'immagine da un'altra prospettiva? Per farlo, fai click &amp; drag sull'immagine!
  </p>
  <p>Vuoi tagliare su lati diversi, trovando cos&igrave; un altro sviluppo del cubo? 
- Per farlo, seleziona dalla colonna sulla sinistra l'icona corrispondente allo sviluppo che 
+ Per farlo, seleziona dalla riga in alto l'icona corrispondente allo sviluppo che 
  preferisci, e gioca a chiuderlo e riaprirlo con il cursore.</p>
  <p>Siamo sicuri che non ci siano altri modi per spalmare il cubo sul piano?! 
  Prova a trovarne un altro! 
@@ -135,7 +137,8 @@ createFoldingCubeIcons(function(index) { foldingCube.configure(index); } );
 Per finire, prendiamo un ipercubo: nessuno di noi se lo pu&ograve; immaginare (almeno credo, con gli
  artisti meglio non essere categorici) perch&eacute; si tratta di un oggetto che vive in 4 dimensioni, 
  dove la nostra percezione non ci consente di arrivare. Tuttavia possiamo pensare di fare l'analogo di 
- quanto fatto prima col quadrato e poi col cubo, ovvero "tagliare" l'ipercubo lungo...lungo cosa?....</p>
+ quanto fatto prima col quadrato e poi col cubo, ovvero "tagliare" l'ipercubo lungo...lungo cosa?
+</p>
  
 <p>L'animazione qui sotto ti dar&agrave; la risposta, se la osservi muovendo lentamente il cursore 
 dalla posizione "chiuso" a quella "aperto". Ma non farlo subito,
@@ -154,8 +157,8 @@ in modo che Dal&iacute; lo possa disegnare!
 <!-- Folding Tesseract ======================================================== -->
 <div class="animation">
 
-<div style="width:600px;height:400px;position:relative;float:left;margin-right:20px;">
-<canvas id="foldingTesseractCanvas" width="600" height="400" tabindex="1" 
+<div style="width:400px;height:300px;position:relative;float:left;margin-right:20px;">
+<canvas id="foldingTesseractCanvas" width="400" height="300" tabindex="1" 
         style="position:absolute;left:0px;top:0px;"></canvas>
 <img src="images/click_drag_icon.png" alt="click & drag icon"
         style="position:absolute;right:5px;top:65px;z-index:2">
@@ -163,16 +166,16 @@ in modo che Dal&iacute; lo possa disegnare!
         style="position:absolute;right:5px;top:5px;z-index:2">
 
 <img id="pierced_faces_btn" src="images/pierced_faces_icon.png" alt="pierced faces icon icon"
-        style="position:absolute;left:5px;top:65px;z-index:2">
+        style="position:absolute;left:5px;top:65px;z-index:2;cursor:pointer;">
 <img id="zw_axis_rotation_btn" src="images/zw_axis_rotation_icon.png" alt="zw axis rotation icon"
-        style="position:absolute;left:5px;top:5px;z-index:2">
+        style="position:absolute;left:5px;top:5px;z-index:2;cursor:pointer;">
 
 <div class="sliderDiv unselectable">
-<span>Aperto</span>
+<span>Chiuso</span>
 <div class="slider ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" id="foldingTesseractSlider">
 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;">
 </span></div>
-<span>Chiuso</span>
+<span>Aperto</span>
 </div> <!-- sliderDiv -->
 
         
@@ -182,12 +185,20 @@ in modo che Dal&iacute; lo possa disegnare!
 
 <script> 
 createFoldingTesseractAnimation();
-$( "#foldingTesseractSlider" ).slider({slide: function(e,ui) {foldingTesseract.setAperture(ui.value*0.01);}});
+$( "#foldingTesseractSlider" ).slider({
+    value:100, 
+    slide: function(e,ui) {foldingTesseract.setAperture(1-ui.value*0.01);}});
 $("#pierced_faces_btn").click(function() { 
     foldingTesseract.holeStatus = ! foldingTesseract.holeStatus;
+    $("#pierced_faces_btn").attr("src", foldingTesseract.holeStatus 
+        ? "images/pierced_faces_active_icon.png"
+        : "images/pierced_faces_icon.png");
 });
 $("#zw_axis_rotation_btn").click(function() { 
     foldingTesseract.zwRotationEnabled = ! foldingTesseract.zwRotationEnabled;
+    $("#zw_axis_rotation_btn").attr("src", foldingTesseract.zwRotationEnabled 
+        ? "images/zw_axis_rotation_active_icon.png"
+        : "images/zw_axis_rotation_icon.png");
 });
 </script>  
 <!-- End Folding Tesseract ======================================================== -->
@@ -220,18 +231,30 @@ ce ne sono pi&ugrave; o meno di 11, come succede per il cubo? </p>
 
 <!-- links ======================================================== -->
 
+<h4 id="links_box_title">Crediti e Link utili</h4>
 <div id="links_box">
 
-<h4>Links</h4>
+<p>Testo: <a href="https://www.facebook.com/unicamscienceoutreach/">Silvia Benvenuti</a>, 
+<a href="https://mat.unicam.it/">Sezione di Matematica</a>, 
+<a href="http://www.unicam.it/">Università di Camerino</a>.<br>
+Animazioni: <a href="http://www.toonz.com/personal/todesco">Gian Marco Todesco</a>,
+<a href="http://www.toonz.com">Digital Video s.r.l.</a><br>
+Grafica: Lavinia Cenci
+</p>
 
-<a href="http://www.unicam.it/">www.unicam.it</a><br>
-<a href="http://www.thedaliuniverse.com/it/exhibitions/dali-experience">Dal&igrave; Experience</a>
+<p><br></p>
+<p>Sei interessato a Dal&igrave;? &rArr; <a href="http://www.thedaliuniverse.com/it/exhibitions/dali-experience">Dal&igrave; Experience</a>
 <br>
+Vuoi ulteriori chiarimenti sulla matematica di cui parliamo?
+&rArr; <a href="http://www.matematita.it">Centro Matematita</a>
+</p>
+<p>
+Vuoi leggere qualcosa di più su Dal&igrave; e la scienza?<br>
 
-<br>
-<h4>Credits</h4>
-Silvia & Lavinia & gmt
-
+M. Gardner, <i>Anamorphic Art, in Time, Travel and Other Mathematical Bewilderments</i>, 
+W.H. Freeman, 1988
+<br><br>
+<img src="images/logo_uso.png">
 
 </div> <!-- links_box -->
 
