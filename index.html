@@ -16,19 +16,25 @@
 <link rel="icon" href="images/dali.ico">    
 </head>
 <body>
-<img id="dali_img" alt="Salvador Dalì" src="images/dali_bg.png">
 
+<!-- Titolo -->
 <h1>Catastroficamente creativo</h1>
+
+<!-- Rettangolo viola con il testo principale e le animazioni (pink box) -->
 <div id="main">
 
+<!-- Corpus Hypercubus : l'immagine in alto a dx -->
 <img src="images/Dali_Crucifixion_hypercube.jpg" alt="Dalì crucifixion" style="width:200px; float:right; margin-left:30px;"/>
 
+<!-- Introduzione -->
 
 <p>Ahiahiahiahi....eccolo arrivato, il nostro curiosone...hai sentito parlare di 
 4 dimensioni e ti si sono rizzate le orecchie!?!?! Bene bene: sei pronto per giocare 
 con ... la matematica?! Sembra un ossimoro, no? E invece vedrai che la matematica pu&ograve; 
 non solo essere divertente, ma anche stimolare la tua creativit&agrave;. Provare per 
-credere! </p>
+credere! 
+</p>
+
 <p>
 Salvador Dal&iacute;, per esempio, ci giocava eccome (e pi&ugrave; creativo di lui...)! 
 La quarta dimensione, in particolare, lo intrigava assai, tanto da spingerlo a 
@@ -49,14 +55,16 @@ ipercubo: guardala nella rappresentazione qui a fianco.
  lungo una retta, di cui occupa 4 segmenti consecutivi: questa figura rappresenta lo 
  sviluppo 1-dimensionale di un quadrato, che di suo vive nel piano, ovvero in 2 dimensioni.
 </p>
+
 <p>
 Prova a farlo nell'animazione qui sotto: parti dalla figura del quadrato chiuso, e 
 poi aprilo piano piano, agendo sul cursore. Facile, no?
 </p>
 
 
-<!-- Folding Square ======================================================== -->
-<div class="animation">
+<!-- Animazione: Folding Square =============================================== -->
+
+<div class="animation" id="foldingSquareDiv">
 <canvas id="square" width="300" height="180" >
 </canvas>
 <br>
@@ -69,11 +77,16 @@ poi aprilo piano piano, agendo sul cursore. Facile, no?
 drawFoldingSquare(90);
 $( "#slider" ).slider({animate:"fast", slide: function(e,ui) { drawFoldingSquare(90-90*ui.value*0.01);},});    
 </script>
-<!-- End Folding Square ======================================================== -->
+<!-- Fine dell'animazione: Folding Square ===================================== -->
 
+<!-- per separare i blocchi di testo uso una linea orizzontale. Possiamo cambiarla o sostituirla. 
+A mio parere ci sta bene qualcosa che stacchi i vari blocchi di testo -->
 <hr>
 
-<p>Adesso prendiamo un cubo: tutti possiamo immaginarcelo, ma le cose sono ancora
+<!-- comincia il secondo blocco del testo -->
+
+<p>
+Adesso prendiamo un cubo: tutti possiamo immaginarcelo, ma le cose sono ancora
  pi&ugrave; facili se lo teniamo in mano, per esempio sotto forma di scatola cubica di
  cartone, oppure se lo guardiamo nell'animazione qui sotto, a partire dalla posizione 
  "chiuso". Se tagliamo lungo tre lati consecutivi il tappo della scatola, e poi tagliamo
@@ -84,11 +97,12 @@ $( "#slider" ).slider({animate:"fast", slide: function(e,ui) { drawFoldingSquare
  dalla posizione "chiuso" alla posizione "aperto", cerca di immaginartelo: l'hai fatto 
  proprio come lo fa l'animazione, o l'hai fatto in modo diverso? Secondo te, il cubo 
  si pu&ograve; spiaccicare sul piano in un modo solo? Se sei curioso di scoprirlo, 
- guarda qui <a href="http://www.matematita.it/materiale/?p=anim.sub7&amp;a=3">qui</a>.</p>
+ guarda qui <a href="http://www.matematita.it/materiale/?p=anim.sub7&amp;a=3">qui</a>.
+ </p>
  
  
-<!-- Folding Cube ======================================================== -->
-<div class="animation" >
+<!-- Animazione: Folding Cube ======================================================== -->
+<div class="animation">
 
 <div style="width:400px;height:300px;position:relative;float:left;margin-right:20px;">
 <canvas id="foldingCubeCanvas" width="400" height="300" tabindex="1" 
@@ -113,39 +127,51 @@ $( "#slider" ).slider({animate:"fast", slide: function(e,ui) { drawFoldingSquare
 createFoldingCubeAnimation();
 createFoldingCubeIcons(function(index) { foldingCube.configure(index); } );
 </script>
-<!-- end Folding Cube  ======================================================== -->
+<!-- Fine animazione: Folding Cube  ================================================== -->
 
- <p>Vuoi cambiare il punto di vista, per 
- vedere l'immagine da un'altra prospettiva? Per farlo, fai click &amp; drag sull'immagine!
- </p>
- <p>Vuoi tagliare su lati diversi, trovando cos&igrave; un altro sviluppo del cubo? 
- Per farlo, seleziona dalla riga in alto l'icona corrispondente allo sviluppo che 
- preferisci, e gioca a chiuderlo e riaprirlo con il cursore.</p>
- <p>Siamo sicuri che non ci siano altri modi per spalmare il cubo sul piano?! 
- Prova a trovarne un altro! 
- </p>
- <p>Vuoi saperne di pi&ugrave;? Allora leggi <a href="https://it.wikipedia.org/wiki/Esamino">qui</a>.
- </p>
-<br style="clear:both">
-
-</div> <!-- class animation -->
-
-<hr>
-
+<!-- Questo è il testo a destra dell'animazione --> 
+<p>
+Vuoi cambiare il punto di vista, per 
+vedere l'immagine da un'altra prospettiva? Per farlo, fai click &amp; drag sull'immagine!
+</p>
 
 <p>
+Vuoi tagliare su lati diversi, trovando cos&igrave; un altro sviluppo del cubo? 
+Per farlo, seleziona dalla riga in alto l'icona corrispondente allo sviluppo che 
+preferisci, e gioca a chiuderlo e riaprirlo con il cursore.
+</p>
+
+<p>
+Siamo sicuri che non ci siano altri modi per spalmare il cubo sul piano?! 
+Prova a trovarne un altro! 
+</p>
+
+<p>
+Vuoi saperne di pi&ugrave;? Allora leggi <a href="https://it.wikipedia.org/wiki/Esamino">qui</a>.
+</p>
+
+<!-- termino la parte di testo a dx dell'animazione -->
+<br style="clear:both">
+</div> <!-- class animation -->
+
+<!-- la solita linea orizzontale per separare blocchi di testo. vedi sopra -->
+<hr>
+
+<!-- Ultimo blocco di testo -->
+<p>
 Per finire, prendiamo un ipercubo: nessuno di noi se lo pu&ograve; immaginare (almeno credo, con gli
- artisti meglio non essere categorici) perch&eacute; si tratta di un oggetto che vive in 4 dimensioni, 
- dove la nostra percezione non ci consente di arrivare. Tuttavia possiamo pensare di fare l'analogo di 
- quanto fatto prima col quadrato e poi col cubo, ovvero "tagliare" l'ipercubo lungo...lungo cosa?
+artisti meglio non essere categorici) perch&eacute; si tratta di un oggetto che vive in 4 dimensioni, 
+dove la nostra percezione non ci consente di arrivare. Tuttavia possiamo pensare di fare l'analogo di 
+quanto fatto prima col quadrato e poi col cubo, ovvero "tagliare" l'ipercubo lungo...lungo cosa?
 </p>
  
-<p>L'animazione qui sotto ti dar&agrave; la risposta, se la osservi muovendo lentamente il cursore 
-dalla posizione "chiuso" a quella "aperto". Ma non farlo subito,
-
- prima prova a immaginartelo!!!</p>
+<p>
+L'animazione qui sotto ti dar&agrave; la risposta, se la osservi muovendo lentamente il cursore 
+dalla posizione "chiuso" a quella "aperto". Ma non farlo subito, prima prova a immaginartelo!!!
+</p>
  
-<p>Se ci pensi, oppure se bari e guardi l'animazione, concluderai che l'ipercubo va 
+<p>
+Se ci pensi, oppure se bari e guardi l'animazione, concluderai che l'ipercubo va 
 tagliato lungo un insieme di quadrati, che fanno da bordo a cubi, che a loro volta fanno da 
 bordo all'ipercubo. Se tagli nel modo giusto, puoi "aprire" il tuo ipercubo e "spalmarlo" 
 ...dove?...nello spazio ordinario, ovvero nello spazio a 3 dimensioni, dove tutti possiamo vederlo. 
@@ -154,7 +180,7 @@ nello spazio 4 dimensionale, ma ci fa il piacere di lasciarsi spiaccicare in una
 in modo che Dal&iacute; lo possa disegnare!
 </p>
 
-<!-- Folding Tesseract ======================================================== -->
+<!-- Animazione: Folding Tesseract ======================================================== -->
 <div class="animation">
 
 <div style="width:400px;height:300px;position:relative;float:left;margin-right:20px;">
@@ -176,11 +202,8 @@ in modo che Dal&iacute; lo possa disegnare!
 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;">
 </span></div>
 <span>Aperto</span>
-</div> <!-- sliderDiv -->
-
-        
+</div> <!-- sliderDiv -->        
 </div> <!-- canvas container -->
-
 </div> <!-- class animation -->
 
 <script> 
@@ -201,9 +224,9 @@ $("#zw_axis_rotation_btn").click(function() {
         : "images/zw_axis_rotation_icon.png");
 });
 </script>  
-<!-- End Folding Tesseract ======================================================== -->
+<!-- Fine animazione: Folding Tesseract =================================================== -->
 
-
+<!-- questo testo è a destra dell'animazione -->
 <p>
 Vuoi cambiare il punto di vista, per vedere l'immagine da un'altra prospettiva? 
 Per farlo, fai click &amp; drag sull'immagine!
@@ -223,26 +246,19 @@ dell'ipercubo nello spazio, no? Riesci ad immaginarne almeno un altro? Secondo t
 ce ne sono pi&ugrave; o meno di 11, come succede per il cubo? </p>
 <p>Vuoi saperne di pi&ugrave;? Allora leggi <a href="http://www.matematita.it/personali/index.php?blog=6&amp;cat=107">qui</a>.
 </p>
+<!-- termino il testo a destra dell'animazione -->
 <br style="clear:left">
 
 </div> 
 <!-- End of pink box  -->
 
 
-<!-- links ======================================================== -->
+<!-- link box ======================================================== -->
 
-<h4 id="links_box_title">Crediti e Link utili</h4>
+<!-- questo è il rettangolo giallo a sinistra -->
 <div id="links_box">
+<h2>Link utili</h2>
 
-<p>Testo: <a href="https://www.facebook.com/unicamscienceoutreach/">Silvia Benvenuti</a>, 
-<a href="https://mat.unicam.it/">Sezione di Matematica</a>, 
-<a href="http://www.unicam.it/">Università di Camerino</a>.<br>
-Animazioni: <a href="http://www.toonz.com/personal/todesco">Gian Marco Todesco</a>,
-<a href="http://www.toonz.com">Digital Video s.r.l.</a><br>
-Grafica: Lavinia Cenci
-</p>
-
-<p><br></p>
 <p>Sei interessato a Dal&igrave;? &rArr; <a href="http://www.thedaliuniverse.com/it/exhibitions/dali-experience">Dal&igrave; Experience</a>
 <br>
 Vuoi ulteriori chiarimenti sulla matematica di cui parliamo?
@@ -254,10 +270,29 @@ Vuoi leggere qualcosa di più su Dal&igrave; e la scienza?<br>
 M. Gardner, <i>Anamorphic Art, in Time, Travel and Other Mathematical Bewilderments</i>, 
 W.H. Freeman, 1988
 <br><br>
-<img src="images/logo_uso.png">
 
-</div> <!-- links_box -->
+<!-- logo. Attenzione: dobbiamo aggiungere un link -->
+<img src="images/logo_uso.png" alt="Logo Unicam Science Outreach">
+
+</div> 
+<!-- fine del box con i link (rettangolo giallo) -->
+
+
+<!-- footer: il rettangolo blu in calce alla pagina -->
+<div id="footer">
+<strong>Testo:</strong> 
+<a href="http://docenti.unicam.it/pdett.aspx?UteId=574&tv=d">Silvia Benvenuti</a>, 
+<a href="https://mat.unicam.it/">Sezione di matematica</a>, 
+<a href="http://www.unicam.it/">Universit&agrave; di Camerino</a>
+&nbsp;
+ 
+<strong>Animazioni:</strong> 
+<a href="http://www.toonz.com/personal/todesco">Gian Marco Todesco</a>, 
+<a href="http://www.toonz.com">Digital Video s.r.l.</a> 
+
+<strong>Grafica:</strong> Guardian Core Graphic, Lavinia Cenci
+</div>
+<!-- fine del box con i link -->
 
 </body>
 </html>
-  
