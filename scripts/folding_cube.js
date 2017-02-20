@@ -108,25 +108,6 @@ FoldingCube.prototype.setAperture = function(t) {
  
 // end of FoldingCube class
 
-function enableGuiBehaviour(ent, camera, renderCanvas) {
-    ent.mouseDown = false;
-    
-    ent.pointerEventObservable.add(function (d, s) {
-        if((s.mask&BABYLON.PrimitivePointerInfo.PointerDown)!=0) {
-            ent.mouseDown = true;
-            ent.setPointerEventCapture(d.pointerId);
-            setTimeout(function () {camera.detachControl(renderCanvas);}, 0);
-            // console.log(d,s);
-        } else if(ent.mouseDown) {
-            ent.mouseDown = false;
-            ent.releasePointerEventsCapture(d.pointerId);
-            camera.attachControl(renderCanvas, true);
-            if(ent.onButtonUp) ent.onButtonUp(ent, s);
-        }        
-    }, BABYLON.PrimitivePointerInfo.PointerDown | BABYLON.PrimitivePointerInfo.PointerUp);   
-}
-
-
 function UnfoldingButton(index, parent, x, y) {
     var L = 6, SP=2, D = L+SP;
     var width = D * (index==10 ? 4 : 3) + SP;
@@ -188,7 +169,6 @@ UnfoldingButton.CheckedColor = BABYLON.Canvas2D.GetSolidColorBrush(new BABYLON.C
 UnfoldingButton.UncheckedColor = BABYLON.Canvas2D.GetSolidColorBrush(new BABYLON.Color4(0.0,0.0,0.0,1));
 
 
-
 function createUnfoldingButtonsBar(scene, x, y) {
     var canvas2d = new BABYLON.ScreenSpaceCanvas2D(scene, {
         id:"unfoldingButtonsBar",
@@ -197,11 +177,6 @@ function createUnfoldingButtonsBar(scene, x, y) {
         // backgroundFill: "#40408088"
     });        
     
-    /*
-    var cb = function(me) { 
-        console.log("index=",me.index); 
-    }
-    */
     canvas2d.currentIndex = 0;
     canvas2d.buttons = [];
     
@@ -216,15 +191,6 @@ function createUnfoldingButtonsBar(scene, x, y) {
         
     var x = 1;
     for(var i=0;i<11;i++) {
-        /*
-        var rect = new BABYLON.Rectangle2D({
-            id: "ub"+i, parent: canvas2d, x: 10 + 50*i, y: 10, width: 40, height: 40, 
-            fill: "#404080FF", 
-        });
-        rect.index = i;
-        enableGuiBehaviour(rect, scene.activeCamera, foldingCube.canvas);
-        rect.onButtonUp = cb;
-        */
         var btn = new UnfoldingButton(i, canvas2d, x, 1);
         x += btn.innerWidth + 4;
         enableGuiBehaviour(btn, scene.activeCamera, foldingCube.canvas);
@@ -240,15 +206,12 @@ var unfoldingButtonsBar;
 
 
 function createIcons(scene) {
-    var canvas2d = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id:"icons",
-        size:new BABYLON.Size(34, 66),
-        x:500,y:300,
-        backgroundFill: "#40408088"
-    }); 
+    
+    
+    /*
   
     texture = new BABYLON.Texture(
-        "images/click_drag_zoom_icon.png", 
+        "images/click_drag_icon.png", 
         scene, 
         false,true,BABYLON.Texture.NEAREST_SAMPLINGMODE);        
     texture.hasAlpha = true;
@@ -258,53 +221,15 @@ function createIcons(scene) {
     sprite = new BABYLON.Sprite2D(texture, {
         id:"sprite",
         parent:canvas2d});
-    
+    */
 }
 
-function createControlSlider(scene) {
-    var canvas2d = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id:"icons",
-        size:new BABYLON.Size(400, 66),
-        x:30,y:100,
-        backgroundFill: "#40408088",
-        children:[
-            new BABYLON.Rectangle2D({
-                id:"slideBar",
-                fill:"#33333388",
-                x:80,y:20,width:180,height:10,
-                roundRadius:5,            
-            }),
-            new BABYLON.Text2D("Chiuso", { 
-                fontName: "14pt Verdana", 
-                x:10,y:10,
-                defaultFontColor: new BABYLON.Color4(1,1,1,1), 
-            }),
-            new BABYLON.Text2D("Aperto", { 
-                fontName: "14pt Verdana", 
-                x:310,y:10,
-                defaultFontColor: new BABYLON.Color4(1,1,1,1), 
-            })
-        ]
-    }); 
-    enableGuiBehaviour(canvas2d, scene.activeCamera, foldingCube.canvas);
-    canvas2d.onButtonUp = function(c,e) { console.log("up"); };
-    canvas2d.onButtonDown = function(c,e) { console.log("dn"); };
-    canvas2d.onButtonDrag = function(c,e) { console.log("drag"); };
+var gui;
+
+function createGui(canvas, scene) {
     
-    slideCursor = new BABYLON.Rectangle2D({
-            id:"slideCursor",
-            parent:canvas2d,
-            fill:"#361446FF",
-            x:100,y:15,width:20,height:20,
-            roundRadius:10,
-            
-        });
+    gui = new Gui(canvas, scene);
     
-}
-
-
-
-function createGui(scene) {
     unfoldingButtonsBar = createUnfoldingButtonsBar(scene, 10,300);
     
     createIcons(scene);
@@ -332,6 +257,11 @@ function createGui(scene) {
     
 }
  
+ 
+ function onResize(w,h) {
+     console.log(w,h);
+     
+ }
  
 //
 // create the babylon scene, engine etc.
@@ -381,6 +311,12 @@ function createFoldingCubeScene(canvas) {
     engine.runRenderLoop(function() {
       scene.render();
     });
+    
+    window.addEventListener("resize", function () {
+        engine.resize();
+        onResize(canvas.width, canvas.height)
+    });
+    onResize(canvas.width, canvas.height)
 
     return scene;
 }
