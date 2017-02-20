@@ -1,4 +1,4 @@
-/* definisco il font 'Dali', caricato dal file dali.ttf */
+﻿/* definisco il font 'Dali', caricato dal file dali.ttf */
 @font-face {
     font-family: 'Dali'; 
     src: url('dali.ttf'); 
@@ -22,8 +22,22 @@ body {
   
   /* immagine di sfondo : la faccia di Dalì */
   background-image:url(images/dali_bg.png);
-  background-repeat:no-repeat;  
+  background-repeat:no-repeat;
+  overflow-x:hidden;
+  
 }
+
+/*
+ho definito le caratteristiche per l'allineamento del testo come accordato
+*/
+
+.left { text-align:left; }
+
+.right { text-align:right; }
+
+.center { text-align:center }
+
+.ref {margin-top:0;margin-bottom:0; }  
 
 /*
   questa classe viene usata per rendere il contenuto non selezionabile.
@@ -74,8 +88,8 @@ canvas {
 */
 hr {
     width:12%;
-    margin-top:6em;    
-    margin-bottom:6em;    
+    margin-top:3em;    
+    margin-bottom:3em;    
 }
 
 
@@ -94,26 +108,28 @@ hr {
 h1 {
     font-family: Dali;
     font-size:67px;
-    margin:0px 0px 0px 320px;
+    margin:0px 0px 0px 360px;
     z-index:10; /* la gambetta della 'f' deve andare sopra il pink box */
 }
 
 /* pink box : contiene il testo principale e le tre animazioni */
+
 #main {
   border-radius: 25px; /* bordi arrotondati */
   background: #DCA4CA; /* sfondo rosa */
   padding: 20px; /* 20 pixels di spazio fra il bordo e il contenuto */
-  margin: -20px 10px 10px 360px; /* margini esterni. 
+  margin: -20px 10px 10px 370px; /* margini esterni. 
                                     quello in alto è negativo perchè voglio che il pink box si infili sotto 
                                     la gambetta della f del titolo
                                     quello a sinistra è grande (360px) perchè devo lasciare spazio per l'immagine di Dalì
                                     e il box con i link */
-  font-size:12px; 
+  font-size:14px; 
 }
 
 /*
   l'animazione con il quadrato va centrata nella pagina
   */
+
 #foldingSquareDiv {
     position:relative;
     left:50%;
@@ -123,13 +139,34 @@ h1 {
 /*
   il titolo del box con i link
   */
+
 #links_box h2 {
     position:absolute; /* è spostato in alto in modo da sporgersi oltre il limite del box */
-    left:30px;
+    left:170px;
     top:-50px;
-    
     font-family: Dali;
-    font-size:30px;
+    font-size:35px;
+}
+
+/* 
+  ho creato altri due stili di heading per i link all'interno del box giallo,
+  così non ho intasato l'HTML. Non so se fosse la scelta migliore
+*/
+
+#links_box h3 {
+    font-family: Verdana;
+    font-size:20px;
+    margin:10px 0px 0px 0px;
+    text-align:right;
+    z-index:10; 
+}
+
+#links_box h4 {
+    font-family: Verdana;
+    font-size:20px;
+    margin:10px 0px 0px 0px;
+    text-align:left;
+    z-index:30; 
 }
 
 /* il box giallo con i link */
@@ -148,6 +185,25 @@ h1 {
   padding: 20px;       /* 20 pixel di distanza dal bordo attorno al contenuto */
 }
 
+/* 
+  ho definito lo stile per i link cliccabili nel box giallo
+*/
+
+#links_box a:link {
+   color: white;
+   text-decoration:none;
+}
+
+#links_box a:hover {
+   color: white;
+   text-decoration:underline;
+}
+
+#links_box a:visited {
+   color:white;
+   text-decoration:none;
+}
+
 /*
   box blu con i crediti, in fondo alla pagina
   */
@@ -157,7 +213,7 @@ h1 {
   margin: 10px 0px 0px 0px; /* margine attorno al bordo. 10 pixel di distanza dal pink box e 0 nelle altre direzioni:
                                in questo modo il box appare attaccato al margine sx,dx e basso della pagina */
 
-  font-size:12px; 
+  font-size:13px; 
   color:white;
 }
 
