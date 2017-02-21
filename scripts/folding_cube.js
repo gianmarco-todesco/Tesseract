@@ -2,7 +2,8 @@
 // by gmt(todesco@toonz.com); feb2017 
 
 var foldingCube;
-
+var unfoldingButtonsBar;
+var gui;
 
 function subrange(x,a,b) { return x<=a?0:x>=b?1:(x-a)/(b-a); } 
 function smooth(x) { return x*x*(3-2*x); }
@@ -108,8 +109,12 @@ FoldingCube.prototype.setAperture = function(t) {
  
 // end of FoldingCube class
 
+
+// === GUI =======================================================================
+
+
 function UnfoldingButton(index, parent, x, y) {
-    var L = 6, SP=2, D = L+SP;
+    var L = 6, SP=1, D = L+SP;
     var width = D * (index==10 ? 4 : 3) + SP;
     var height = D * 5 + SP;
     BABYLON.Rectangle2D.call(this, {
@@ -135,7 +140,7 @@ function UnfoldingButton(index, parent, x, y) {
     ];
     var x1 = 0;
     for(var i=0;i<6;i++) {
-        var x = SP+D*pp[index][i][0], y = height - D * pp[index][i][1] - L - SP;
+        var x = SP+D*pp[index][i][0], y = height - 1 - D * pp[index][i][1] - L - SP;
         new BABYLON.Rectangle2D({
             parent:this,
             fill:UnfoldingButton.UncheckedColor,
@@ -165,43 +170,49 @@ UnfoldingButton.prototype.setChecked = function(checked) {
     else this.setFill(UnfoldingButton.UncheckedColor);
 }
 
-UnfoldingButton.CheckedColor = BABYLON.Canvas2D.GetSolidColorBrush(new BABYLON.Color4(0.00,0.20,1.00,1));
+UnfoldingButton.CheckedColor = BABYLON.Canvas2D.GetSolidColorBrush(new BABYLON.Color4(0.00,0x30/0x100,1.00,1));
 UnfoldingButton.UncheckedColor = BABYLON.Canvas2D.GetSolidColorBrush(new BABYLON.Color4(0.0,0.0,0.0,1));
 
-
-function createUnfoldingButtonsBar(scene, x, y) {
-    var canvas2d = new BABYLON.ScreenSpaceCanvas2D(scene, {
+function UnfoldingButtonsBar(gui) {
+    BABYLON.ScreenSpaceCanvas2D.call(this, gui.scene, {
         id:"unfoldingButtonsBar",
-        size:new BABYLON.Size(340, 40),
-        x:x,y:y,
+        size:new BABYLON.Size(290, 40),
+        x : 0, y : 270,
         // backgroundFill: "#40408088"
     });        
-    
-    canvas2d.currentIndex = 0;
-    canvas2d.buttons = [];
-    
-    var cb = function(btn, e) {
+    this.currentIndex = 0;
+    this.buttons = [];
+    var me = this;
+    var onButtonClick = function(btn, e) {
         var index = btn.index;
-        canvas2d.buttons[canvas2d.currentIndex].setChecked(false);
+        me.buttons[me.currentIndex].setChecked(false);
         btn.setChecked(true);
-        canvas2d.currentIndex = index;        
-        console.log("index=", index);
-        foldingCube.configure(index);
+        me.currentIndex = index;    
+        if(me.onSelected) me.onSelected(index);
     }
         
     var x = 1;
     for(var i=0;i<11;i++) {
-        var btn = new UnfoldingButton(i, canvas2d, x, 1);
+        var btn = new UnfoldingButton(i, this, x, 1);
         x += btn.innerWidth + 4;
-        enableGuiBehaviour(btn, scene.activeCamera, foldingCube.canvas);
-        btn.onButtonUp = cb;
-        canvas2d.buttons.push(btn);
+        gui.enableGuiBehaviour(btn);        
+        btn.onClick = onButtonClick;
+        this.buttons.push(btn);
     } 
-    canvas2d.buttons[0].setChecked(true);
-    return canvas2d;
+    this.buttons[0].setChecked(true);
+    gui.add(this);
+}
+
+UnfoldingButtonsBar.prototype = Object.create(BABYLON.ScreenSpaceCanvas2D.prototype); 
+UnfoldingButtonsBar.prototype.constructor = UnfoldingButtonsBar;
+ 
+UnfoldingButtonsBar.prototype.onResize = function(w,h) {
+    this.x = 13;
+    this.y = h - 50;
+    
 }
  
-var unfoldingButtonsBar;
+ 
 
 
 
@@ -224,18 +235,18 @@ function createIcons(scene) {
     */
 }
 
-var gui;
-
 function createGui(canvas, scene) {
     
     gui = new Gui(canvas, scene);
     
-    unfoldingButtonsBar = createUnfoldingButtonsBar(scene, 10,300);
+    unfoldingButtonsBar = new UnfoldingButtonsBar(gui);
+    unfoldingButtonsBar.onSelected = function(index) { foldingCube.configure(index); };
     
-    createIcons(scene);
-    createControlSlider(scene);
+    new ControlSlider(gui, 1.0, function(v) { foldingCube.setAperture(1.0-v); } );
+    //createIcons(scene);
+    //createControlSlider(scene);
     
-    
+    gui.resize();
     
     
     /*
@@ -306,15 +317,16 @@ function createFoldingCubeScene(canvas) {
     ground.receiveShadows = true;
     ground.material = groundMat;
     
-    createGui(scene);
+    createGui(canvas, scene);
 
     engine.runRenderLoop(function() {
-      scene.render();
+        gui.tick();
+        scene.render();
     });
     
     window.addEventListener("resize", function () {
         engine.resize();
-        onResize(canvas.width, canvas.height)
+        gui.resize();
     });
     onResize(canvas.width, canvas.height)
 

@@ -1,12 +1,30 @@
 function Gui(canvas, scene) {
     this.canvas = canvas;
-    this.scene = scene;
+    this.scene = scene;    
+    this.widgets = [];
+    this.iconCount = 0;
+    this.createStaticIcons();
+}
+
+Gui.prototype.add = function(ent) {
+    this.widgets.push(ent);
+}
+
+Gui.prototype.resize = function() {
+    var w = this.canvas.width;
+    var h = this.canvas.height;
+    this.widgets.forEach(function(widget) {
+        if(widget.onResize) widget.onResize(w,h);
+    });
+}
+Gui.prototype.tick = function() {
+    this.widgets.forEach(function(widget) { if(widget.tick) widget.tick(); });
 }
 
 Gui.prototype.enableGuiBehaviour = function(ent) {
     ent.mouseDown = false;
     
-    var camera = this.camera;
+    var camera = this.scene.activeCamera;
     var canvas = this.canvas;
     
     ent.pointerEventObservable.add(function (d, s) {
@@ -15,26 +33,30 @@ Gui.prototype.enableGuiBehaviour = function(ent) {
             ent.setPointerEventCapture(d.pointerId);
             setTimeout(function () {camera.detachControl(canvas);}, 0);
             var x = d.primitivePointerPos.x;
-            var y = d.primitivePointerPos.x;            
+            var y = d.primitivePointerPos.y;            
             ent.offx = x - d.canvasPointerPos.x;
             ent.offy = y - d.canvasPointerPos.y;
             ent.lastx = x;
-            ent.lasty = y;            
+            ent.lasty = y;   
+            ent.startx = x;
+            ent.starty = y;
             if(ent.onButtonDown) ent.onButtonDown(ent,{x:x,y:y,e:d});            
         } else {
             var x = d.canvasPointerPos.x + ent.offx;
-            var y = d.canvasPointerPos.x + ent.offy;            
+            var y = d.canvasPointerPos.y + ent.offy;             
             if(s.mask == BABYLON.PrimitivePointerInfo.PointerMove) {    
                 var dx = x - ent.lastx; ent.lastx = x;
                 var dy = y - ent.lasty; ent.lasty = y;
                 if(ent.mouseDown && ent.onButtonDrag) {                    
                     ent.onButtonDrag(ent, {x:x,y:y,dx:dx,dy:dy,e:d});                    
                 }
-            } else if(s.mask == BABYLON.PrimitivePointerInfo.PointerUp) {
+            } else if(s.mask == BABYLON.PrimitivePointerInfo.PointerUp) {            
+                if(ent.onButtonUp) ent.onButtonUp(ent, {x:x, y:y, e:d});   
+                if(ent.onClick && Math.pow(x-ent.startx,2)+Math.pow(y-ent.starty,2)<10) 
+                    ent.onClick(ent, {x:x, y:y, e:d}); 
                 ent.mouseDown = false;
                 ent.releasePointerEventsCapture(d.pointerId);
                 camera.attachControl(canvas, true);
-                if(ent.onButtonUp) ent.onButtonUp(ent, {x:x, y:y, e:d});
             }
         }        
     }, BABYLON.PrimitivePointerInfo.PointerDown 
@@ -42,110 +64,131 @@ Gui.prototype.enableGuiBehaviour = function(ent) {
      | BABYLON.PrimitivePointerInfo.PointerMove);       
 }
 
+Gui.prototype.createStaticIcons = function() {
+    new StaticIcon(this, "images/scroll_to_zoom_icon.png", function(icon, w, h) { icon.x = w-62; icon.y = h - 70; });    
+    new StaticIcon(this, "images/click_drag_icon.png", function(icon, w, h) { icon.x = w-62; icon.y = h - 140; });
+}
 
+//=============================================================================
 
-var click_drag_icon, zoom_icon;
-
-function createStaticIcons() {
-    var texture;
-    
-    texture = new BABYLON.Texture(
-        "images/click_drag_icon.png", 
-        scene, 
-        false);
-    texture.hasAlpha = true;
-    click_drag_icon = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id:"click_drag_icon",
-        size:new BABYLON.Size(32, 32),
-        x:500,y:300,
-        backgroundFill: "#40408088",
-        children:[new BABYLON.Sprite2D(texture)]
+function StaticIcon(gui, url, resize) {
+    BABYLON.ScreenSpaceCanvas2D.call(this, gui.scene, {
+        id:"icon_" + (gui.iconCount++),
+        size:new BABYLON.Size(64, 64),
+        // backgroundFill: "#40408088",
     }); 
-    
-    texture = new BABYLON.Texture(
-        "images/zoom_icon.png", 
-        scene, 
-        false);
+    gui.widgets.push(this);
+    this.resize = resize;
+    var texture = new BABYLON.Texture(url, gui.scene, false);
     texture.hasAlpha = true;
-    zoom_icon = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id:"zoom_icon",
-        size:new BABYLON.Size(32, 32),
-        x:500,y:350,
-        backgroundFill: "#40408088",
-        children:[new BABYLON.Sprite2D(texture)]
-    });  
-    return [click_drag_icon, zoom_icon];   
+    new BABYLON.Sprite2D(texture, { parent:this} );
 }
 
-function placeStaticIcons(w,h) {
-    var x = w - 70;
-    var y = h - 40;
-    zoom_icon.x = x;
-    zoom_icon.y = y;
-    y -= 50;
-    click_drag_icon.x = x;
-    click_drag_icon.y = y;    
-}
+StaticIcon.prototype = Object.create(BABYLON.ScreenSpaceCanvas2D.prototype); 
+StaticIcon.prototype.constructor = StaticIcon;
+
+StaticIcon.prototype.onResize = function(w,h) { this.resize(this, w, h); }
+
+//=============================================================================
 
 
+function ControlSlider(gui, value, cb) {
 
-function createControlSlider(scene) {
     var x0 = 80, x1 = 260;
-    var canvas2d = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id:"icons",
-        size:new BABYLON.Size(400, 66),
-        x:30,y:100,
-        backgroundFill: "#40408088",
+    BABYLON.ScreenSpaceCanvas2D.call(this, gui.scene, {
+        id:"controlSlider",
+        size:new BABYLON.Size(360, 30),
+        // backgroundFill: "#40408088",
         children:[
             new BABYLON.Rectangle2D({
                 id:"slideBar",
-                fill:"#33333388",
-                x:x0,y:20,width:x1-x0,height:10,
+                fill:"#111111CC",
+                x:x0,y:10,width:x1-x0+20,height:10,
                 roundRadius:5,            
             }),
             new BABYLON.Text2D("Chiuso", { 
                 fontName: "14pt Verdana", 
-                x:10,y:10,
+                x:10,y:1,
                 defaultFontColor: new BABYLON.Color4(1,1,1,1), 
             }),
             new BABYLON.Text2D("Aperto", { 
                 fontName: "14pt Verdana", 
-                x:x1+30,y:10,
+                x:x1+30,y:1,
                 defaultFontColor: new BABYLON.Color4(1,1,1,1), 
             })
         ]
     }); 
-    slideCursor = new BABYLON.Rectangle2D({
+    slideCursor = this.cursor = new BABYLON.Rectangle2D({
             id:"slideCursor",
-            parent:canvas2d,
-            fill:"#361446FF",
-            x:100,y:15,width:20,height:20,
-            roundRadius:10,
-            
+            parent:this,
+            fill:"#0030FFFF",
+            x:0,y:5,width:20,height:20,
+            roundRadius:10,            
         });
-    canvas2d.xmin = x0;
-    canvas2d.xmax = x1;
+    slideCursor.targetx = 0;
+    this.xmin = x0;
+    this.xmax = x1;
+    this.setValue(value);
     
-        
-    enableGuiBehaviour(canvas2d, scene.activeCamera, foldingCube.canvas);
-    canvas2d.onButtonDown = function(c,e) { 
-        canvas2d.lastx = e.x;
-        canvas2d.lasty = e.y;
-    };
-    canvas2d.onButtonDrag = function(c,e) { 
+    this.onValueChanged = cb;
+    gui.enableGuiBehaviour(this);
+    var me = this;
+    this.onButtonDown = ControlSlider.onButtonDown;
+    this.onButtonDrag = ControlSlider.onButtonDrag;
+ 
+    gui.widgets.push(this);
+/* 
+    this.onButtonDrag = function(c,e) { 
         slideCursor.x += e.dx;
         if(slideCursor.x < c.xmin) slideCursor.x = c.xmin;
         else if(slideCursor.x > c.xmax) slideCursor.x = c.xmax;
-        canvas2d.value = 100.0 * (slideCursor.x - canvas2d.xmin)
-                                 /(canvas2d.xmax - canvas2d.xmin);
-        console.log(canvas2d.value);
-        foldingCube.setAperture(1-canvas2d.value*0.01);
-    };
-    canvas2d.onButtonUp = function(c,e) { 
-        console.log("up");
-    };
-    
-    
+        me.value = (slideCursor.x - me.xmin)/(me.xmax - me.xmin);
+        me.onValueChanged(me.value);        
+    };    
+    */
     
 }
+
+ControlSlider.onButtonDown = function(c,e) {
+    var d = c.cursor.x - e.x;
+    console.log(d);
+    if(Math.abs(d)>10) { c.cursorOffx = 0;  this.setCursorX(e.x);}
+    else { c.cursorOffx = d; } 
+}
+ControlSlider.onButtonDrag = function(c,e) {
+    this.setCursorX(e.x + c.cursorOffx);
+}
+
+
+//        foldingCube.setAperture(1-canvas2d.value*0.01);
+
+
+ControlSlider.prototype = Object.create(BABYLON.ScreenSpaceCanvas2D.prototype); 
+ControlSlider.prototype.constructor = ControlSlider;
+
+ControlSlider.prototype.onResize = function(w,h) { 
+    this.x = (w-this.width)/2; 
+    this.y = 2; 
+}
+
+ControlSlider.prototype.setCursorX = function(x) {
+    if(x<this.xmin)x=this.xmin; else if(x>this.xmax) x=this.xmax;
+    this.cursor.x = x;
+    this.value = (x-this.xmin)/(this.xmax-this.xmin);
+    this.onValueChanged(this.value);
+}
+
+ControlSlider.prototype.setValue = function(v) {
+    if(v<0)v=0.0; else if(v>1.0)v=1.0;
+    this.value = v;
+    var x = this.xmin + (this.xmax-this.xmin) * this.value;
+    this.cursor.x = this.cursor.targetx = x;
+}
+
+ControlSlider.prototype.tick = function() {
+    if(Math.abs(this.cursor.x - this.cursor.targetx)>10) {
+    
+    }
+}
+
 
