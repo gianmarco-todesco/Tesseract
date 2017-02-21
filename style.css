@@ -142,8 +142,8 @@ h1 {
 
 #links_box h2 {
     position:absolute; /* è spostato in alto in modo da sporgersi oltre il limite del box */
-    left:170px;
-    top:-50px;
+    right:20px;
+    top:-60px;
     font-family: Dali;
     font-size:35px;
 }
@@ -151,22 +151,27 @@ h1 {
 /* 
   ho creato altri due stili di heading per i link all'interno del box giallo,
   così non ho intasato l'HTML. Non so se fosse la scelta migliore
+  
+  gmt: assolutamente si. bravissima. Meglio ancora usare le classi
+  invece dei tag Hn 
 */
-
-#links_box h3 {
-    font-family: Verdana;
-    font-size:20px;
-    margin:10px 0px 0px 0px;
-    text-align:right;
-    z-index:10; 
-}
 
 #links_box .reference {
     font-family: Verdana;
     font-size:20px;
-    text-align:left;
+    text-align:right;
     font-weight:bold;
     margin-top:0;
+}
+
+#links_box .reference_title { 
+    margin-top:20px; 
+    margin-bottom:0; 
+    font-style: italic;
+}
+
+.red {
+    font-weight:bold;
 }
 
 /* il box giallo con i link */
