@@ -65,20 +65,20 @@ Gui.prototype.enableGuiBehaviour = function(ent) {
 }
 
 Gui.prototype.createStaticIcons = function() {
-    new StaticIcon(this, "images/scroll_to_zoom_icon.png", function(icon, w, h) { icon.x = w-62; icon.y = h - 70; });    
-    new StaticIcon(this, "images/click_drag_icon.png", function(icon, w, h) { icon.x = w-62; icon.y = h - 140; });
+    new StaticIcon(this, "images/scroll_to_zoom_icon.png", {resize: function(icon, w, h) { icon.x = w-62; icon.y = h - 70; }});    
+    new StaticIcon(this, "images/click_drag_icon.png", { resize: function(icon, w, h) { icon.x = w-62; icon.y = h - 140; }});
 }
 
 //=============================================================================
 
-function StaticIcon(gui, url, resize) {
+function StaticIcon(gui, url, conf) {
     BABYLON.ScreenSpaceCanvas2D.call(this, gui.scene, {
         id:"icon_" + (gui.iconCount++),
         size:new BABYLON.Size(64, 64),
         // backgroundFill: "#40408088",
     }); 
     gui.widgets.push(this);
-    this.resize = resize;
+    this.resize = conf.resize;
     var texture = new BABYLON.Texture(url, gui.scene, false);
     texture.hasAlpha = true;
     new BABYLON.Sprite2D(texture, { parent:this} );
@@ -87,12 +87,12 @@ function StaticIcon(gui, url, resize) {
 StaticIcon.prototype = Object.create(BABYLON.ScreenSpaceCanvas2D.prototype); 
 StaticIcon.prototype.constructor = StaticIcon;
 
-StaticIcon.prototype.onResize = function(w,h) { this.resize(this, w, h); }
+StaticIcon.prototype.onResize = function(w,h) { if(this.resize) this.resize(this, w, h); }
 
 //=============================================================================
 
 
-function ControlSlider(gui, value, cb) {
+function ControlSlider(gui, value, config) {
 
     var x0 = 80, x1 = 260;
     BABYLON.ScreenSpaceCanvas2D.call(this, gui.scene, {
@@ -130,46 +130,32 @@ function ControlSlider(gui, value, cb) {
     this.xmax = x1;
     this.setValue(value);
     
-    this.onValueChanged = cb;
+    this.onValueChanged = config.callback;
     gui.enableGuiBehaviour(this);
     var me = this;
     this.onButtonDown = ControlSlider.onButtonDown;
     this.onButtonDrag = ControlSlider.onButtonDrag;
  
     gui.widgets.push(this);
-/* 
-    this.onButtonDrag = function(c,e) { 
-        slideCursor.x += e.dx;
-        if(slideCursor.x < c.xmin) slideCursor.x = c.xmin;
-        else if(slideCursor.x > c.xmax) slideCursor.x = c.xmax;
-        me.value = (slideCursor.x - me.xmin)/(me.xmax - me.xmin);
-        me.onValueChanged(me.value);        
-    };    
-    */
     
+    this.resize = config.resize || function(widget,w,h) { widget.x = (w-widget.width)/2; widget.y = 2; };
 }
+    
 
 ControlSlider.onButtonDown = function(c,e) {
-    var d = c.cursor.x - e.x;
-    console.log(d);
-    if(Math.abs(d)>10) { c.cursorOffx = 0;  this.setCursorX(e.x);}
-    else { c.cursorOffx = d; } 
+    var off = 10;
+    var d = c.cursor.x+off - e.x;
+    if(Math.abs(d)>10) { c.cursorOffx = -off;  this.setCursorX(e.x+c.cursorOffx);}
+    else { c.cursorOffx = c.cursor.x - e.x; } 
 }
 ControlSlider.onButtonDrag = function(c,e) {
     this.setCursorX(e.x + c.cursorOffx);
 }
 
-
-//        foldingCube.setAperture(1-canvas2d.value*0.01);
-
-
 ControlSlider.prototype = Object.create(BABYLON.ScreenSpaceCanvas2D.prototype); 
 ControlSlider.prototype.constructor = ControlSlider;
 
-ControlSlider.prototype.onResize = function(w,h) { 
-    this.x = (w-this.width)/2; 
-    this.y = 2; 
-}
+ControlSlider.prototype.onResize = function(w,h) { this.resize(this, w,h); }
 
 ControlSlider.prototype.setCursorX = function(x) {
     if(x<this.xmin)x=this.xmin; else if(x>this.xmax) x=this.xmax;
@@ -191,4 +177,31 @@ ControlSlider.prototype.tick = function() {
     }
 }
 
+//=============================================================================
+
+function ToggleButton(gui, url, config) {
+    BABYLON.ScreenSpaceCanvas2D.call(this, gui.scene, {
+        id:"icon_" + (gui.iconCount++),
+        size:new BABYLON.Size(64, 64),
+        // backgroundFill: "#40408088",
+    }); 
+    gui.widgets.push(this);
+    this.resize = config.resize;
+    var texture = new BABYLON.Texture(url, gui.scene, false);
+    texture.hasAlpha = true;
+    this.sprite = new BABYLON.Sprite2D(texture, { parent:this, spriteSize:new BABYLON.Size(64,64), spriteFrame:0} );
+    
+    var callback = config.callback || function(tog, on) { console.log(on); };
+    gui.enableGuiBehaviour(this);     
+    var me = this;
+    this.onClick = function() {
+        me.sprite.spriteFrame = 1-me.sprite.spriteFrame;
+        callback(me, me.sprite.spriteFrame);
+    };
+}
+
+ToggleButton.prototype = Object.create(BABYLON.ScreenSpaceCanvas2D.prototype); 
+ToggleButton.prototype.constructor = ToggleButton;
+
+ToggleButton.prototype.onResize = function(w,h) { this.resize(this, w, h); }
 

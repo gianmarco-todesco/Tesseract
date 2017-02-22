@@ -1,5 +1,10 @@
 var foldingTesseract;
 
+var myScene;
+
+var minCameraRadius = 7;
+var maxCameraRadius = 10.5;
+
 function subrange(x,a,b) { return x<=a?0:x>=b?1:(x-a)/(b-a); } 
 function smooth(x) { return x*x*(3-2*x); }
 
@@ -7,8 +12,10 @@ function smooth(x) { return x*x*(3-2*x); }
 // class FoldingTesseract
 //
 function FoldingTesseract(name, scene) {
+    this.scene = scene;
+    
     var mat1 = new BABYLON.StandardMaterial("mat2", scene);
-    mat1.diffuseTexture = new BABYLON.Texture("images/hc_face2.png", scene);
+    mat1.diffuseTexture = new BABYLON.Texture("images/hc_face.png", scene);
     mat1.backFaceCulling = true;
     mat1.specularColor.r = mat1.specularColor.g = mat1.specularColor.b = 0.1;
     
@@ -18,6 +25,7 @@ function FoldingTesseract(name, scene) {
     mesh.material = mat1;
     
     this.mesh = mesh;
+    mesh.position.y = 1;
     var vertexData = this.vertexData = new BABYLON.VertexData();    
 
     this.hole = 0.0;
@@ -30,7 +38,9 @@ function FoldingTesseract(name, scene) {
     
     this.makeGeometry();
     this.updateVertices();
-    this.vertexData.applyToMesh(this.mesh);        
+    this.vertexData.applyToMesh(this.mesh);   
+
+        
 }
 
 FoldingTesseract.prototype.makeGeometry = function() {
@@ -192,9 +202,12 @@ FoldingTesseract.prototype.makerot = function(i,sgn,theta) {
 }
 
 FoldingTesseract.prototype.setAperture = function(t) {
+    // t=0 => aperto; t=1 => chiuso
     this.aperture = t;
     this.updateVertices();
-    this.vertexData.applyToMesh(this.mesh);    
+    this.vertexData.applyToMesh(this.mesh);   
+    this.mesh.position.y = 1-t;   
+    this.scene.activeCamera.radius = maxCameraRadius * (1-t) + minCameraRadius * t;
 }
 
 FoldingTesseract.prototype.setTheta = function(t) {
@@ -288,11 +301,14 @@ FoldingTesseract.prototype.tick = function() {
 
 
 // create the Babylon scene & engine; the scene contains a folding tesseract 
-function createFoldingTesseractScene(canvas) {
+function createFoldingTesseractAnimation() {
+
+    canvas = document.getElementById('foldingTesseractCanvas');
+
     var engine = new BABYLON.Engine(canvas, true);
     var scene = new BABYLON.Scene(engine);
     var camera = new BABYLON.ArcRotateCamera('camera1',
-        1.0, 1.8, 10, new BABYLON.Vector3(0, 0, 0), scene);
+        1.0, 1.8, maxCameraRadius, new BABYLON.Vector3(0, 0, 0), scene);
     camera.setTarget(BABYLON.Vector3.Zero());
     camera.wheelPrecision = 30;
     
@@ -304,20 +320,39 @@ function createFoldingTesseractScene(canvas) {
     
     foldingTesseract = new FoldingTesseract("ft", scene);
     
+    createFoldingTesseractGui(canvas, scene);
+    
     engine.runRenderLoop(function() {
       scene.render();
       foldingTesseract.tick();
     });
+    window.addEventListener("resize", function () {
+        engine.resize();
+        foldingTesseract.gui.resize();
+    });
+    
     return scene;
 }
 
-var myScene;
-
 // find the canvas '#foldingTesseractCanvas' and create the babylon scene
-function createFoldingTesseractAnimation() {
-    canvas = document.getElementById('foldingTesseractCanvas');
-    scene = createFoldingTesseractScene(canvas);
-    myScene = scene;    
+function createFoldingTesseractGui(canvas, scene) {
+
+    var gui = foldingTesseract.gui = new Gui(canvas, scene);    
+    
+    new ControlSlider(gui, 1.0, {callback: function(v) { foldingTesseract.setAperture(1.0-v); } } );
+    
+    new ToggleButton(gui, "images/pierced_faces_icon.png", {
+        resize: function(btn, w,h) { btn.x = 5; btn.y = h - 71; },
+        callback: function(btn, on) { foldingTesseract.setHoleStatus(on); }
+    });
+    new ToggleButton(gui, "images/zw_axis_rotation_icon.png", {
+        resize: function(btn, w,h) { btn.x = 5; btn.y = h - 153; },
+        callback: function(btn, on) { foldingTesseract.zwRotationEnabled = on; }
+    });
+
+    gui.resize();
+    
+        
 }
 
 

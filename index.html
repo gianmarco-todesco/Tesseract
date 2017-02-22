@@ -68,7 +68,7 @@ poi aprilo piano piano, agendo sul cursore. Facile, no?
 <div class="animation" id="foldingSquareDiv">
 <canvas id="square" width="300" height="180" >
 </canvas>
-<br>
+<br style="clear:both">
 <span>Chiuso</span> 
 <div style="display:inline-block;width:150px;margin-left:20px;margin-right:20px;" 
    id="slider"></div>
@@ -78,6 +78,7 @@ poi aprilo piano piano, agendo sul cursore. Facile, no?
 drawFoldingSquare(90);
 $( "#slider" ).slider({animate:"fast", slide: function(e,ui) { drawFoldingSquare(90-90*ui.value*0.01);},});    
 </script>
+
 <!-- Fine dell'animazione: Folding Square ===================================== -->
 
 <!-- per separare i blocchi di testo uso una linea orizzontale. Possiamo cambiarla o sostituirla. 
@@ -104,11 +105,7 @@ Adesso prendiamo un cubo: tutti possiamo immaginarcelo, ma le cose sono ancora
  
 <!-- Animazione: Folding Cube ======================================================== -->
 <div class="animation">
-
-<div style="width:400px;height:300px;position:relative;float:left;margin-right:20px;">
-<canvas id="foldingCubeCanvas" width="400" height="300" tabindex="1" 
-        style="position:absolute;left:0px;top:0px;"></canvas>            
-</div> <!-- animation --> 
+<canvas id="foldingCubeCanvas"></canvas>            
 
 <script> 
 createFoldingCubeAnimation();
@@ -168,47 +165,11 @@ in modo che Dal&iacute; lo possa disegnare!
 
 <!-- Animazione: Folding Tesseract ======================================================== -->
 <div class="animation">
-
-<div style="width:400px;height:300px;position:relative;float:left;margin-right:20px;">
-<canvas id="foldingTesseractCanvas" width="400" height="300" tabindex="1" 
-        style="position:absolute;left:0px;top:0px;"></canvas>
-<img src="images/click_drag_icon.png" alt="click & drag icon"
-        style="position:absolute;right:5px;top:65px;z-index:2">
-<img src="images/zoom_icon.png" alt="zoom icon"
-        style="position:absolute;right:5px;top:5px;z-index:2">
-
-<img id="pierced_faces_btn" src="images/pierced_faces_icon.png" alt="pierced faces icon icon"
-        style="position:absolute;left:5px;top:65px;z-index:2;cursor:pointer;">
-<img id="zw_axis_rotation_btn" src="images/zw_axis_rotation_icon.png" alt="zw axis rotation icon"
-        style="position:absolute;left:5px;top:5px;z-index:2;cursor:pointer;">
-
-<div class="sliderDiv unselectable">
-<span>Chiuso</span>
-<div class="slider ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" id="foldingTesseractSlider">
-<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;">
-</span></div>
-<span>Aperto</span>
-</div> <!-- sliderDiv -->        
-</div> <!-- canvas container -->
+<canvas id="foldingTesseractCanvas"></canvas>
 </div> <!-- class animation -->
 
 <script> 
 createFoldingTesseractAnimation();
-$( "#foldingTesseractSlider" ).slider({
-    value:100, 
-    slide: function(e,ui) {foldingTesseract.setAperture(1-ui.value*0.01);}});
-$("#pierced_faces_btn").click(function() { 
-    foldingTesseract.holeStatus = ! foldingTesseract.holeStatus;
-    $("#pierced_faces_btn").attr("src", foldingTesseract.holeStatus 
-        ? "images/pierced_faces_active_icon.png"
-        : "images/pierced_faces_icon.png");
-});
-$("#zw_axis_rotation_btn").click(function() { 
-    foldingTesseract.zwRotationEnabled = ! foldingTesseract.zwRotationEnabled;
-    $("#zw_axis_rotation_btn").attr("src", foldingTesseract.zwRotationEnabled 
-        ? "images/zw_axis_rotation_active_icon.png"
-        : "images/zw_axis_rotation_icon.png");
-});
 </script>  
 <!-- Fine animazione: Folding Tesseract =================================================== -->
 

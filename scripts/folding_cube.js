@@ -3,7 +3,6 @@
 
 var foldingCube;
 var unfoldingButtonsBar;
-var gui;
 
 function subrange(x,a,b) { return x<=a?0:x>=b?1:(x-a)/(b-a); } 
 function smooth(x) { return x*x*(3-2*x); }
@@ -112,7 +111,6 @@ FoldingCube.prototype.setAperture = function(t) {
 
 // === GUI =======================================================================
 
-
 function UnfoldingButton(index, parent, x, y) {
     var L = 6, SP=1, D = L+SP;
     var width = D * (index==10 ? 4 : 3) + SP;
@@ -212,72 +210,25 @@ UnfoldingButtonsBar.prototype.onResize = function(w,h) {
     
 }
  
- 
-
-
-
-function createIcons(scene) {
+function createFoldingCubeGui(canvas, scene) {
     
-    
-    /*
-  
-    texture = new BABYLON.Texture(
-        "images/click_drag_icon.png", 
-        scene, 
-        false,true,BABYLON.Texture.NEAREST_SAMPLINGMODE);        
-    texture.hasAlpha = true;
-    texture.wrapU = BABYLON.Texture.CLAMP_ADDRESSMODE;
-    texture.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE;
-    
-    sprite = new BABYLON.Sprite2D(texture, {
-        id:"sprite",
-        parent:canvas2d});
-    */
-}
-
-function createGui(canvas, scene) {
-    
-    gui = new Gui(canvas, scene);
+    var gui = foldingCube.gui = new Gui(canvas, scene);
     
     unfoldingButtonsBar = new UnfoldingButtonsBar(gui);
     unfoldingButtonsBar.onSelected = function(index) { foldingCube.configure(index); };
     
-    new ControlSlider(gui, 1.0, function(v) { foldingCube.setAperture(1.0-v); } );
-    //createIcons(scene);
-    //createControlSlider(scene);
+    new ControlSlider(gui, 1.0, {callback: function(v) { foldingCube.setAperture(1.0-v); } });
     
     gui.resize();
-    
-    
-    /*
-    var canvas2d = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id: "ScreenCanvas",
-        size: new BABYLON.Size(600, 50),
-        backgroundFill: "#4040408F",
-        x:10, y:300,
-        children: [
-            new BABYLON.Text2D("Hello World!", {
-                id: "text",
-                marginAlignment: "h: center, v:center",
-                fontName: "20pt Arial",
-            })
-        ]
-    });
-    */
-    
-    
 }
- 
- 
- function onResize(w,h) {
-     console.log(w,h);
-     
- }
- 
+  
 //
 // create the babylon scene, engine etc.
 //
-function createFoldingCubeScene(canvas) {
+function createFoldingCubeAnimation() {
+
+    canvas = document.getElementById('foldingCubeCanvas');
+
     var engine = new BABYLON.Engine(canvas, true);
     var scene = new BABYLON.Scene(engine);
     var camera = new BABYLON.ArcRotateCamera('camera1',
@@ -317,147 +268,17 @@ function createFoldingCubeScene(canvas) {
     ground.receiveShadows = true;
     ground.material = groundMat;
     
-    createGui(canvas, scene);
+    createFoldingCubeGui(canvas, scene);
 
     engine.runRenderLoop(function() {
-        gui.tick();
+        foldingCube.gui.tick();
         scene.render();
     });
     
     window.addEventListener("resize", function () {
         engine.resize();
-        gui.resize();
+        foldingCube.gui.resize();
     });
-    onResize(canvas.width, canvas.height)
 
     return scene;
-}
-
-/*
-function createHud(scene) {
-    var c2d = new BABYLON.ScreenSpaceCanvas2D(scene, 
-    { 
-        id: "c2d_1", size: new BABYLON.Size(400, 200), 
-        x:100, y:600,
-        backgroundFill: "#C0C0C040", 
-        backgroundRoundRadius: 20 
-    });
-
-    var rect = new BABYLON.Rectangle2D({
-        id: "mainRect", parent: c2d, x: 2, y: 2, width: 100, height: 100, 
-        fill: "#404080FF", border: "#A040A0D0, #FFFFFFFF", borderThickness: 10, 
-        roundRadius: 10, 
-        children: 
-        [
-            new BABYLON.Rectangle2D(
-            { 
-                id: "insideRect", marginAlignment: "v: center, h: center", 
-                width: 40, height: 40, fill: "#FAFF75FF", roundRadius: 10 
-            })
-        ]});
-}
-*/
-
-// 
-// create the Babylon scene and attach the open/close slider
-function createFoldingCubeAnimation() {
-    var canvas;
-    canvas = document.getElementById('foldingCubeCanvas');
-    scene = createFoldingCubeScene(canvas);
-
-    // createHud(scene);
-    /*
-    hud.pointerEventObservable.add(function (d, s) {
-        console.log(d,s);
-    }, BABYLON.PrimitivePointerInfo.PointerDown);
-    
-    hud.pointerEventObservable.add(function (d, s) {
-        console.log("ok");
-    }, BABYLON.PrimitivePointerInfo.PointerUp);
-    */
-    
-
-    
-    $( "#foldingCubeSlider" ).slider({
-        animate:"fast",
-        slide: function(e,ui) {
-            foldingCube.setAperture(1.0-ui.value*0.01);
-        },
-        value:100
-
-    });
-}
-
-// draw the 11 icons representing different cube unfoldings
-// when the user click the index-th icon then calls callback(index)
-
-function createFoldingCubeIcons(callback) {
-    var canvas,scene;
-    canvas = document.getElementById('foldingCubeIconsCanvas');
-    var ctx = canvas.getContext("2d");
-    
-    var pp = [
-        [[1,0],[0,1],[1,1],[2,1],[1,2],[1,3]],
-        [[0,1],[1,1],[2,1],[2,0],[1,2],[1,3]],
-        [[0,0],[1,0],[2,0],[1,1],[1,2],[1,3]],
-        [[1,0],[1,1],[2,1],[0,2],[1,2],[1,3]],
-        [[0,0],[1,0],[1,1],[2,1],[1,2],[1,3]],
-        [[0,0],[1,0],[1,1],[1,2],[2,2],[1,3]],
-        [[0,0],[1,0],[1,1],[1,2],[1,3],[2,3]],
-        [[0,0],[1,0],[1,1],[1,2],[2,2],[2,3]],
-        [[1,0],[1,1],[1,2],[0,2],[0,3],[0,4]],
-        [[1,0],[1,1],[2,1],[0,2],[1,2],[0,3]],
-        [[2,0],[3,0],[1,1],[2,1],[0,2],[1,2]],        
-    ];
-    
-
-    var sz = 6, u = sz+1;
-    var mrg = sz - 1;
-    var x0 = 5, y0 = 5;
-    var positions = [];
-    var sizes = [];
-    var x = x0, y = y0;
-    var tlx = [3,3,3,3,3,3,3,3,2,3,4];
-    var tly = [4,4,4,4,4,4,4,4,5,4,3];
-    
-    for(var i=0; i<pp.length; i++) {
-        lx = u*tlx[i];
-        ly = u*tly[i];
-        positions.push(x,y);
-        sizes.push(lx,ly);
-        if(canvas.width>canvas.height) x += lx + mrg;
-        else y += ly + mrg;
-    }
-    var drawItem = function(i, hl) {
-        if(hl) ctx.fillStyle = '#0000ff';
-        else  ctx.fillStyle = '#000000';      
-        var x1 = x0 + positions[i*2];
-        var y1 = y0 + positions[i*2+1];        
-        for(var j=0; j<6;j++) {
-            var x = x1 + u*pp[i][j][0], y = y1 + u*pp[i][j][1];
-            ctx.fillRect(x,y,sz,sz);            
-        }        
-    }
-    
-    for(var i=0; i<pp.length; i++) drawItem(i, i==0);
-    canvas.curIndex = 0;
-    
-    canvas.addEventListener('click', function(e) {
-        var x = e.offsetX;
-        var y = e.offsetY;
-        var index = canvas.curIndex;
-        for(var i=0;i<11;i++) {
-            var xa = x0 + positions[i*2], ya = y0 + positions[i*2+1];
-            var xb = xa + sizes[i*2], yb = ya + sizes[i*2+1];
-            
-            if(xa<=x && x<=xb && ya<=y && y<=yb) {index = i; break; }
-        }
-        if(index != canvas.curIndex) {
-            drawItem(canvas.curIndex, false);
-            canvas.curIndex = index;
-            drawItem(canvas.curIndex, true);
-        }
-        callback(index);
-    });
-    
 }
